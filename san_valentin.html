@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Un mensaje del universo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Libre+Baskerville:wght@400;700&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --deep-night: #0a0e27;
+            --night-blue: #1a1f3a;
+            --soft-gold: #d4af37;
+            --warm-white: #f5f1e8;
+            --subtle-pink: #ffd4e5;
+            --star-glow: #ffffff;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: var(--deep-night);
+            color: var(--warm-white);
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .section.active {
+            opacity: 1;
+        }
+
+        .section.hidden {
+            display: none;
+        }
+
+        /* Estrellas de fondo */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Sección 1: Inicio */
+        #section1 {
+            text-align: center;
+            z-index: 1;
+        }
+
+        #section1 h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 400;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-bottom: 3rem;
+            letter-spacing: 0.05em;
+            animation: fadeInUp 2s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.1rem;
+            padding: 1rem 3rem;
+            background: transparent;
+            border: 2px solid var(--soft-gold);
+            color: var(--soft-gold);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--soft-gold);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .btn:hover {
+            color: var(--deep-night);
+        }
+
+        .btn:hover::before {
+            left: 0;
+        }
+
+        /* Sección 2: Constelación */
+        #section2 {
+            z-index: 1;
+        }
+
+        #section2 .intro-text {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            text-align: center;
+            max-width: 700px;
+            margin-bottom: 4rem;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards;
+            font-style: italic;
+            color: rgba(245, 241, 232, 0.8);
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .constellation-container {
+            position: relative;
+            width: 90vw;
+            max-width: 800px;
+            height: 400px;
+            margin: 0 auto;
+        }
+
+        .constellation-star {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--star-glow);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--star-glow),
+                        0 0 20px var(--star-glow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: starAppear 1s ease forwards;
+        }
+
+        @keyframes starAppear {
+            to { opacity: 1; }
+        }
+
+        .constellation-star:hover {
+            transform: scale(1.5);
+            box-shadow: 0 0 20px var(--soft-gold),
+                        0 0 40px var(--soft-gold);
+        }
+
+        .constellation-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--soft-gold), 
+                transparent);
+            transform-origin: left center;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .constellation-line.visible {
+            opacity: 0.6;
+        }
+
+        .name-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 6vw, 4rem);
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--soft-gold);
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            letter-spacing: 0.2em;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .name-text.visible {
+            opacity: 1;
+        }
+
+        /* Sección 3: Poema */
+        #section3 {
+            z-index: 1;
+            text-align: center;
+        }
+
+        .poem-intro {
+            font-size: clamp(1.3rem, 3vw, 2rem);
+            max-width: 800px;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+            font-style: italic;
+            opacity: 0;
+            animation: fadeIn 2s ease 0.5s forwards;
+        }
+
+        .poem {
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            max-width: 700px;
+            line-height: 2;
+            margin: 3rem auto;
+            padding: 3rem;
+            background: rgba(26, 31, 58, 0.5);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            opacity: 0;
+            animation: fadeIn 2s ease 1s forwards;
+            position: relative;
+        }
+
+        .poem::before,
+        .poem::after {
+            content: '✦';
+            position: absolute;
+            color: var(--soft-gold);
+            font-size: 2rem;
+            opacity: 0.5;
+        }
+
+        .poem::before {
+            top: 1rem;
+            left: 1rem;
+        }
+
+        .poem::after {
+            bottom: 1rem;
+            right: 1rem;
+        }
+
+        .poem p {
+            margin: 1.5rem 0;
+        }
+
+        .poem .highlight {
+            color: var(--soft-gold);
+            font-weight: 600;
+        }
+
+        .ps-text {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-style: italic;
+            margin-top: 2rem;
+            color: rgba(255, 212, 229, 0.9);
+            opacity: 0;
+            animation: fadeIn 2s ease 2s forwards;
+        }
+
+        /* Sección 4: Revelación */
+        #section4 {
+            z-index: 1;
+            text-align: center;
+        }
+
+        #section4 .question {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards;
+        }
+
+        .reveal-text {
+            font-family: 'Libre Baskerville', serif;
+            font-size: clamp(1.3rem, 3vw, 2rem);
+            max-width: 700px;
+            line-height: 1.8;
+            margin-top: 3rem;
+            color: var(--soft-gold);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease;
+            font-style: italic;
+        }
+
+        .reveal-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Efectos especiales */
+        .shooting-star {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px white;
+            animation: shoot 3s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes shoot {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-300px, 300px);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section {
+                padding: 1rem;
+            }
+
+            .constellation-container {
+                height: 300px;
+            }
+
+            .poem {
+                padding: 2rem 1.5rem;
+            }
+
+            .btn {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--soft-gold);
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            opacity: 0.7;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, 10px); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Estrellas de fondo -->
+    <div class="stars" id="starsContainer"></div>
+
+    <!-- Sección 1: Inicio -->
+    <section id="section1" class="section active">
+        <h1>Hoy el universo tiene algo curioso que mostrarte.</h1>
+        <button class="btn" onclick="goToSection(2)">Descubrir</button>
+    </section>
+
+    <!-- Sección 2: Constelación -->
+    <section id="section2" class="section">
+        <p class="intro-text">Dicen que algunas constelaciones aparecen cuando menos lo esperas...</p>
+        <div class="constellation-container" id="constellationContainer">
+            <!-- Las estrellas se generarán con JavaScript -->
+        </div>
+        <div class="name-text" id="nameText"></div>
+        <div class="scroll-indicator" onclick="goToSection(3)">↓</div>
+    </section>
+
+    <!-- Sección 3: Poema -->
+    <section id="section3" class="section">
+        <p class="poem-intro">No sé si el universo planea estas cosas...<br>pero hay personas que brillan distinto.</p>
+        <div class="poem">
+            <p>No eres estrella fugaz,<br>porque no pasas rápido.</p>
+            <p>Eres más bien de esas que <span class="highlight">se quedan brillando</span><br>cuando nadie lo espera.</p>
+        </div>
+        <p class="ps-text">PD: Si esto fuera una misión espacial,<br>oficialmente ya me desvié de mi órbita.</p>
+        <button class="btn" onclick="goToSection(4)" style="margin-top: 3rem;">Continuar</button>
+    </section>
+
+    <!-- Sección 4: Revelación -->
+    <section id="section4" class="section">
+        <p class="question">¿Quieres saber quién hizo esto?</p>
+        <button class="btn" onclick="revealCreator()">Revelar</button>
+        <p class="reveal-text" id="revealText">Alguien que cree que tu risa tiene mejor iluminación que cualquier estrella.
+            Feliz Dia De San Valentin
+</p>
+    </section>
+
+    <script>
+        // Configuración - CAMBIA ESTE NOMBRE
+        const NOMBRE = "SOFÍA"; // Cambia este nombre por el que desees
+
+        // Crear estrellas de fondo
+        function createStars() {
+            const container = document.getElementById('starsContainer');
+            const starCount = 200;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.opacity = Math.random() * 0.7 + 0.3;
+                container.appendChild(star);
+            }
+
+            // Estrellas fugaces ocasionales
+            setInterval(() => {
+                if (Math.random() > 0.7) {
+                    const shootingStar = document.createElement('div');
+                    shootingStar.className = 'shooting-star';
+                    shootingStar.style.left = Math.random() * 100 + '%';
+                    shootingStar.style.top = Math.random() * 50 + '%';
+                    document.body.appendChild(shootingStar);
+
+                    setTimeout(() => shootingStar.remove(), 3000);
+                }
+            }, 5000);
+        }
+
+        // Navegar entre secciones
+        function goToSection(sectionNum) {
+            const currentSection = document.querySelector('.section.active');
+            const nextSection = document.getElementById('section' + sectionNum);
+
+            currentSection.classList.remove('active');
+            setTimeout(() => {
+                currentSection.classList.add('hidden');
+                nextSection.classList.remove('hidden');
+                setTimeout(() => {
+                    nextSection.classList.add('active');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                    if (sectionNum === 2) {
+                        setTimeout(createConstellation, 500);
+                    }
+                }, 50);
+            }, 500);
+        }
+
+        // Crear constelación interactiva
+        function createConstellation() {
+            const container = document.getElementById('constellationContainer');
+            const nameText = document.getElementById('nameText');
+            const rect = container.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            // Configurar número de estrellas basado en la longitud del nombre
+            const starCount = NOMBRE.length;
+            const radius = Math.min(rect.width, rect.height) * 0.35;
+            const stars = [];
+            const lines = [];
+
+            // Crear estrellas en círculo
+            for (let i = 0; i < starCount; i++) {
+                const angle = (i / starCount) * Math.PI * 2 - Math.PI / 2;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+
+                const star = document.createElement('div');
+                star.className = 'constellation-star';
+                star.style.left = x + 'px';
+                star.style.top = y + 'px';
+                star.style.animationDelay = (i * 0.1) + 's';
+                container.appendChild(star);
+                stars.push({ element: star, x, y });
+            }
+
+            // Función para conectar estrellas
+            function connectStars() {
+                // Eliminar líneas anteriores
+                lines.forEach(line => line.remove());
+                lines.length = 0;
+
+                // Crear nuevas líneas
+                for (let i = 0; i < stars.length; i++) {
+                    const nextIndex = (i + 1) % stars.length;
+                    const star1 = stars[i];
+                    const star2 = stars[nextIndex];
+
+                    const dx = star2.x - star1.x;
+                    const dy = star2.y - star1.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const angle = Math.atan2(dy, dx);
+
+                    const line = document.createElement('div');
+                    line.className = 'constellation-line';
+                    line.style.width = distance + 'px';
+                    line.style.left = star1.x + 'px';
+                    line.style.top = star1.y + 'px';
+                    line.style.transform = `rotate(${angle}rad)`;
+                    container.appendChild(line);
+                    lines.push(line);
+
+                    setTimeout(() => {
+                        line.classList.add('visible');
+                    }, i * 200);
+                }
+
+                // Mostrar nombre después de que todas las líneas estén visibles
+                setTimeout(() => {
+                    nameText.textContent = NOMBRE;
+                    nameText.classList.add('visible');
+                }, stars.length * 200 + 500);
+            }
+
+            // Activar constelación con mouse o touch
+            let activated = false;
+            const activateConstellation = () => {
+                if (!activated) {
+                    activated = true;
+                    connectStars();
+                }
+            };
+
+            container.addEventListener('mousemove', activateConstellation);
+            container.addEventListener('touchstart', activateConstellation);
+
+            // Auto-activar después de 3 segundos si no hay interacción
+            setTimeout(() => {
+                if (!activated) {
+                    activateConstellation();
+                }
+            }, 3000);
+        }
+
+        // Revelar creador
+        function revealCreator() {
+            const revealText = document.getElementById('revealText');
+            revealText.classList.add('visible');
+        }
+
+        // Inicializar
+        createStars();
+
+        // Ocultar todas las secciones excepto la primera al inicio
+        document.querySelectorAll('.section').forEach((section, index) => {
+            if (index > 0) {
+                section.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
